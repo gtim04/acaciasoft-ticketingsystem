@@ -20,7 +20,7 @@
                                 <th>Code</th>
                                 <th>Created by</th>
                                 <th>Description</th>
-                                <th>Handler</th>
+                                <th>Status</th>
                                 <th>Created At</th>
                             </tr>
                         </thead>
@@ -44,7 +44,7 @@ $(document).ready(function(){
             { data: 'code', name: 'code' },
             { data: 'user.name', name: 'name' },
             { data: 'description', name: 'description' },
-            { data: 'ticket_handler', name: 'ticket_handler' },
+            { data: 'status', name: 'status' },
             { data: 'created_at', name: 'created_at' }
         ]
     });
