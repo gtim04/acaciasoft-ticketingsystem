@@ -19,7 +19,9 @@ class CreateTicketsTable extends Migration
             $table->string('importance', 25);
             $table->unsignedBigInteger('user_id');
             $table->integer('ticket_handler')->nullable();
+            $table->text('title');
             $table->text('description');
+            $table->dateTime('issue_date', 0);
             $table->string('status', 20)->default('pending');
             $table->boolean('completed')->default(0);
             $table->boolean('deleted')->default(0);

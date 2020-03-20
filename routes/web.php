@@ -17,10 +17,18 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/getUserTickets', 'TicketController@indexUser')->name('datatables.ticket');
-
 Auth::routes();
+
+Route::get('/getUserTickets', 'TicketController@indexUser')->name('datatables.ticket')->middleware('auth');
+
+Route::get('/newTicket', 'TicketController@indexCreate')->name('index.ticket')->middleware('auth');
+
+Route::post('/submitTicket', 'TicketController@storeTicket')->name('store.ticket')->middleware('auth');
 
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::fallback(function () {
+    abort(404);
+});

@@ -10,12 +10,8 @@ class TicketController extends Controller
 {
     public function indexUser(){
     	// dd(Datatables::of(Ticket::get()));
-    	
-    	$id = auth()->user()->id;
-        $tickets = Ticket::with('user')->where('user_id', $id)->get();
         // dd(Datatables::of($tickets)->toJson());
         // $tickets->
-
         // $tickets = Ticket::
         //             select('code')
         //             ->where('user_id', 1)
@@ -29,6 +25,38 @@ class TicketController extends Controller
     	// dd($tickets);
     	// dd($id);
     	// dd(Datatables::of($data));
-    	return Datatables::of($tickets)->toJson();
+        $id = auth()->user()->id; //get current user id
+        $tickets = Ticket::with('user')->where('user_id', $id)->get(); //join 2 tables
+        return Datatables::of($tickets)->toJson(); //pass data tables
+    }
+
+    public function indexCreate(){
+        return view('user.create');
+    }
+
+    public function storeTicket(Request $request){
+        
+        $lastTicket = Ticket::latest()->first();
+
+        if($lastTicket){
+            $lastTicket = $lastTicket->id + 1;
+        } else {
+            $lastTicket = 1;
+        }//getting index for last ticket
+
+        //converting variables to be inserted
+        $datetime = date('Y-m-d H:i:s', strtotime("$request->date $request->time"));
+        $dtCode = preg_replace('/[\s-:]+/', '' ,$datetime);
+        $data = new Ticket();
+        $code = 'AST-' .$dtCode. '-' . strtoupper($request->importance). '-' .$lastTicket;
+
+        //inserting the new record
+        $data->code = $code;
+        $data->importance = $request->importance;
+        $data->user_id = auth()->user()->id;
+        $data->title = $request->title;
+        $data->description = $request->body;
+        $data->issue_date = $datetime;
+        $data->save();
     }
 }
