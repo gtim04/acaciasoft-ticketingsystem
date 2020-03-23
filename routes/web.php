@@ -13,22 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Auth::routes();
 
-Route::get('/getUserTickets', 'TicketController@indexUser')->name('datatables.ticket')->middleware('auth');
+Route::get('/', function () {
+	Auth::logout();
+	return redirect('login');
+})->middleware('auth');
 
-Route::get('/newTicket', 'TicketController@indexCreate')->name('index.ticket')->middleware('auth');
+Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'user.'], function (){
+	Route::get('/', 'Ticketing\HomeController@userIndex')->name('dashboard');
+	Route::get('/gettickets', 'Ticketing\DashController@getTickets')->name('tickets');
+	Route::get('/newticket', 'Ticketing\CreateTicketController@indexCreate')->name('newticket');
+	Route::post('/submitticket', 'Ticketing\CreateTicketController@storeTicket')->name('submit');
+	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
+	Route::post('/editticket', 'Ticketing\PopTicketController@editTicket')->name('edit');
+	Route::post('/resolveticket', 'Ticketing\PopTicketController@completeTicket')->name('resolved');
+});
 
-Route::post('/submitTicket', 'TicketController@storeTicket')->name('store.ticket')->middleware('auth');
-
-Route::get('/', 'HomeController@index')->name('home');
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'admin.'], function(){
+	Route::get('/', 'Ticketing\HomeController@adminIndex')->name('dashboard');
+	Route::get('/gettickets', 'Ticketing\AdminDashController@getTickets')->name('tickets');
+});
 
 Route::fallback(function () {
-    abort(404);
-});
+	abort(404);
+});//fallback

@@ -3,24 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-
+    
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    </html>
 </head>
 <body>
+
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route(Route::currentRouteName()) }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -61,18 +57,52 @@
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
+                        </li>
+                        @endguest
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="py-5">
+            @yield('content')
+        </main>
+
+        <!-- modals -->
+        <div id="success_tic" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-sm">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="page-body">
+                        <div class="head">
+                            <h3>Success!</h3>
                         </div>
-                    </li>
-                    @endguest
-                </ul>
+
+                        <h1 style="text-align:center;">
+                        <div class="checkmark-circle">
+                            <div class="background"></div>
+                            <div class="checkmark draw"></div>
+                        </div>
+                        <h1>
+                        </div>
+
+                        <div class="pb-3 text-center">
+                            <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Review your ticket/s.</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <main class="py-5">
-        @yield('content')
-    </main>
-</div>
+    </div>
+
+    
+
 </body>
-</html>
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
+</html>
+
+
