@@ -120,36 +120,36 @@
                 data: 'status', name: 'status' 
             }, { 
                 data: 'created_at', name: 'created_at' 
-            },{ 
-                data: 'viewBtn', name: 'viewBtn' 
+            }, { 
+                data: 'pickBtn', name: 'pickBtn' 
             }],
 
         });
 
-        // $('#ticket-table').on('click', '.view', function(){ 
-        //     var ticketCode = $(this).closest('tr').find('.sorting_1').text();
-        //     // alert(ticketCode);
-        //     $.post('{!! route('user.sticket') !!}',
-        //     {
-        //         code: ticketCode
-        //     },
-        //     function(data){
-        //         var ticket = JSON.parse(data);
-        //         // alert(ticket['code']);
-        //         $('#show_tic').modal({
-        //             show: true,
-        //             backdrop: 'static',
-        //             keyboard: false
-        //         });
-        //         $('.modal-title').html("Ticket: " +ticket['code']);
-        //         $('#title').val(ticket['title']);
-        //         $('#pbody').val(ticket['description']);
-        //         $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
-        //         $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
-        //         $('#tid').val(ticket['id']);
-        //         $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
-        //     });
-        // });
+        $('#ticket-table').on('click', '.pick', function(){ 
+            var ticketCode = $(this).closest('tr').find('.sorting_1').text();
+            alert(ticketCode);
+            // $.post('{!! route('user.sticket') !!}',
+            // {
+            //     code: ticketCode
+            // },
+            // function(data){
+            //     var ticket = JSON.parse(data);
+            //     // alert(ticket['code']);
+            //     $('#show_tic').modal({
+            //         show: true,
+            //         backdrop: 'static',
+            //         keyboard: false
+            //     });
+            //     $('.modal-title').html("Ticket: " +ticket['code']);
+            //     $('#title').val(ticket['title']);
+            //     $('#pbody').val(ticket['description']);
+            //     $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
+            //     $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
+            //     $('#tid').val(ticket['id']);
+            //     $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
+            // });
+        });
 
         // $('#show_tic').on('click', '.edit', function(){
         //     var title, date, importance, date, time, pbody, id;

@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Ticket::class, function (Faker $faker) {
     return [
-        'code' => 'AST-20200319020400-HIGH-1',
+        'code' => 'AST-'.$faker->unique()->randomNumber($nbDigits = 7, $strict = false) .'-'. $faker->word .'-'. $faker->randomDigit,
         'user_id' => factory(\App\User::class),
         'title' => $faker->word,
         'importance' => $faker->word,

@@ -12,11 +12,11 @@ class AdminDashController extends Controller
     protected function getTickets(){
         $tickets = Ticket::with('user')->get(); //join 2 tables
         return DataTables::of($tickets)
-        ->addColumn('viewBtn', '<input type="button" class="view btn-primary" value="Pickup Ticket">')
-        ->rawColumns(['viewBtn'])
+        ->addColumn('pickBtn', '<input type="button" class="pick btn-primary" value="Pickup Ticket">')
+        ->rawColumns(['pickBtn'])
         ->editColumn('created_at', function ($tickets) {
           return date('F, d Y, g:i a', strtotime($tickets->created_at));
       })
-  		->make(true); //return modified datatables
+  		  ->make(true); //return modified datatables
     }
 }
