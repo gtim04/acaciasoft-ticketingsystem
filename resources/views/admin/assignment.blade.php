@@ -16,9 +16,9 @@
 
                     <div class="container-fluid">
                         <div class="pb-2">
-                            <a href="{{ route('admin.sassignment') }}" class="float-right btn btn-xs btn-success pull-right">Go to assignments</a>
+                            <a href="{{ route('admin.dashboard') }}" class="float-right btn btn-xs btn-success pull-right">Back to ticket pool</a>
                         </div>
-                        <h5>Ticket Pool</h5>
+                        <h5>Assignment Pool</h5>
                         <hr>
 
                         <div>
@@ -85,7 +85,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="pick btn btn-success">Pick-up ticket</button>
+                <button type="button" class="thread btn btn-dark">Show thread</button>
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
         $('#ticket-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! route('admin.tickets') !!}',
+            ajax: '{!! route('admin.assignment') !!}',
             columns: [{ 
                 data: 'code', name: 'code' 
             }, { 
@@ -186,25 +186,26 @@
         //     }
         // });
 
-        $('#show_tic').on('click', '.pick', function(){
+        $('#show_tic').on('click', '.thread', function(){
 
-            var id = $('#tid').val();
+            alert('threading');
+            // var id = $('#tid').val();
 
-            $('#show_tic').modal('hide');
+            // $('#show_tic').modal('hide');
 
 
-                $.post('{!! route('admin.pickup') !!}',
-                {
-                    id: id
-                },
-                function(){
-                    $('#success_tic').modal({
-                        show: true,
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                });
-                e.preventDefault();
+            //     $.post('{!! route('admin.pickup') !!}',
+            //     {
+            //         id: id
+            //     },
+            //     function(){
+            //         $('#success_tic').modal({
+            //             show: true,
+            //             backdrop: 'static',
+            //             keyboard: false
+            //         });
+            //     });
+            //     e.preventDefault();
         });
     });
 </script>

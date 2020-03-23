@@ -7,18 +7,23 @@ use Illuminate\Http\Request;
 use App\Ticket;
 use Yajra\Datatables\Datatables;
 
-class AdminDashController extends Controller
+class AdminAssigmentController extends Controller
 {
-    protected function getTickets(){
+    protected function indexAssignments(){
+        return view('admin.assignment');
+    }
+
+    protected function getAssignments(){
+        $id = auth()->user()->id; //get current user id
         $tickets = Ticket::with('user')
-                  ->where([['ticket_handler', '=', null], ['completed', '=', 0],])
-                  ->get(); //join 2 tables
+                    ->where([['ticket_handler', '=', $id], ['completed', '=', 0],])
+                    ->get(); //join 2 tables
         return DataTables::of($tickets)
         ->addColumn('viewBtn', '<input type="button" class="view btn-primary" value="View Ticket">')
         ->rawColumns(['viewBtn'])
         ->editColumn('created_at', function ($tickets) {
           return date('F, d Y, g:i a', strtotime($tickets->created_at));
       })
-  		  ->make(true); //return modified datatables
+        ->make(true); //return modified datatables
     }
 }

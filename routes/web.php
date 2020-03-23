@@ -33,6 +33,10 @@ Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'use
 Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'admin.'], function(){
 	Route::get('/', 'Ticketing\HomeController@adminIndex')->name('dashboard');
 	Route::get('/gettickets', 'Ticketing\AdminDashController@getTickets')->name('tickets');
+	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
+	Route::post('/pickupticket', 'Ticketing\PopTicketController@pickupTicket')->name('pickup');
+	Route::get('/showassigned', 'Ticketing\AdminAssigmentController@indexAssignments')->name('sassignment');
+	Route::get('/getassigned', 'Ticketing\AdminAssigmentController@getAssignments')->name('assignment');
 });
 
 Route::fallback(function () {

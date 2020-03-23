@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ticketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ticket;
+use Illuminate\Support\Facades\Auth;
 
 class PopTicketController extends Controller
 {
@@ -26,10 +27,17 @@ class PopTicketController extends Controller
     }
 
     protected function completeTicket(Request $request){
-    	//inserting the new record
+    	//updating completed field
     	$data = Ticket::find($request->id);
         $data->completed = 1;
         $data->save();
         // return true;
+    }
+
+    protected function pickupTicket(Request $request){
+        // updating handler field
+        $data = Ticket::find($request->id);
+        $data->ticket_handler = Auth::id();
+        $data->save();
     }
 }
