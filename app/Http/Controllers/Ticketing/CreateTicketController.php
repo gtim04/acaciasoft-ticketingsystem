@@ -9,6 +9,10 @@ use App\Ticket;
 class CreateTicketController extends Controller
 {
 
+    protected function indexCreate(){
+        return view('user.create');
+    }
+
     protected function storeTicket(Request $request){
         
         $lastTicket = Ticket::latest()->first();

@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="pb-3 text-center">
-                            <a href="{{ route(Route::currentRouteName()) }}" class="btn btn-primary">Review your ticket/s.</a>
+                            <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Go back to dashboard</a>
                         </div>
                     </div>
                 </div>
