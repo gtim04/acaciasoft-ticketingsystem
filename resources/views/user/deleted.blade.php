@@ -116,7 +116,6 @@
             },
             function(data){
                 var ticket = JSON.parse(data);
-                // alert(ticket['code']);
                 $('#show_tic').modal({
                     show: true,
                     backdrop: 'static',

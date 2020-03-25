@@ -114,7 +114,7 @@
 			}
 
 			//testing if ticket is resolved
-			if(jsonData[0]['ticket'][0]['isCompleted'] !== 0){
+			if(jsonData[0]['ticket'][0]['isCompleted'] !== 0 || jsonData[0]['ticket'][0]['isDeleted'] !== 0){
 				$('#resolved').html('Re-open this ticket?');
 				$('#comment').prop('disabled', true);
 				$('#submit').prop('disabled', true);
