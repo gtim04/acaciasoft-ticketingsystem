@@ -26,10 +26,11 @@ class PopTicketController extends Controller
         // return true;
     }
 
-    protected function completeTicket(Request $request){
+    protected function deleteTicket(Request $request){
     	//updating completed field
     	$data = Ticket::find($request->id);
-        $data->completed = 1;
+        $data->isDeleted = 1;
+        $data->status = 'deleted';
         $data->save();
         // return true;
     }
@@ -38,6 +39,7 @@ class PopTicketController extends Controller
         // updating handler field
         $data = Ticket::find($request->id);
         $data->ticket_handler = Auth::id();
+        $data->status = 'Pending';
         $data->save();
     }
 }

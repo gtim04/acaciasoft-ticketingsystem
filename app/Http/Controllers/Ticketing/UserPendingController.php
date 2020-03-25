@@ -7,16 +7,16 @@ use Illuminate\Http\Request;
 use App\Ticket;
 use Yajra\Datatables\Datatables;
 
-class AdminAssigmentController extends Controller
+class UserPendingController extends Controller
 {
-    protected function indexAssignments(){
-        return view('admin.assignment');
+    protected function indexPending(){
+    	return view('user.pending');
     }
 
-    protected function getAssignments(){
+    protected function getPending(){
         $id = auth()->user()->id; //get current user id
         $tickets = Ticket::with('user')
-                    ->where([['ticket_handler', '=', $id], ['status', '=', 'pending'], ['isDeleted', '=', 0]])
+                    ->where([['user_id', '=', $id], ['status', '=', 'pending'], ['isDeleted', '=', 0]])
                     ->get(); //join 2 tables
         return DataTables::of($tickets)
         ->addColumn('viewBtn', '<input type="button" class="view btn-primary" value="View Ticket">')

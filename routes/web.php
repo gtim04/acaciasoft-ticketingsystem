@@ -18,25 +18,59 @@ Auth::routes();
 Route::get('/', function () {
 	Auth::logout();
 	return redirect('login');
-})->middleware('auth');
+});
 
 Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'user.'], function (){
-	Route::get('/', 'Ticketing\HomeController@userIndex')->name('dashboard');
-	Route::get('/gettickets', 'Ticketing\DashController@getTickets')->name('tickets');
+	//dashboard
+	Route::get('/', 'Ticketing\DashController@userIndex')->name('dashboard');
+	Route::post('/getopentickets', 'Ticketing\DashController@getOpen')->name('tickets');
+	//resolvedtickets
+	Route::get('/showresolved', 'Ticketing\UserResolvedController@indexResolved')->name('sresolved');
+	Route::post('/getrestickets', 'Ticketing\UserResolvedController@getResolved')->name('resolved');
+	//newtickets
 	Route::get('/newticket', 'Ticketing\CreateTicketController@indexCreate')->name('newticket');
 	Route::post('/submitticket', 'Ticketing\CreateTicketController@storeTicket')->name('submit');
+	//pop modal
 	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
 	Route::post('/editticket', 'Ticketing\PopTicketController@editTicket')->name('edit');
-	Route::post('/resolveticket', 'Ticketing\PopTicketController@completeTicket')->name('resolved');
+	Route::post('/deleteticket', 'Ticketing\PopTicketController@deleteTicket')->name('delete');
+	//pending tickets
+	Route::get('/showpending', 'Ticketing\UserPendingController@indexPending')->name('spending');
+	Route::post('/getpentickets', 'Ticketing\UserPendingController@getPending')->name('pending');
+	//deletedtickets
+	Route::get('/showdeleted', 'Ticketing\UserDeletedController@indexDeleted')->name('sdeleted');
+	Route::post('/getdeleted', 'Ticketing\UserDeletedController@getDeleted')->name('deleted');
+	//thread
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@indexUserThread')->name('thread');
+	Route::post('/getthread', 'Ticketing\ThreadController@getThread')->name('sthread');
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment');
+	//resolving tickets
+	Route::post('/issueresolved', 'Ticketing\ThreadController@resolveTicket')->name('complete');
+
+	//reopening tickets
+	Route::post('/reopenticket', 'Ticketing\ThreadController@reopenTicket')->name('reopen');
 });
 
 Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'admin.'], function(){
-	Route::get('/', 'Ticketing\HomeController@adminIndex')->name('dashboard');
-	Route::get('/gettickets', 'Ticketing\AdminDashController@getTickets')->name('tickets');
+	//dashboard
+	Route::get('/', 'Ticketing\AdminDashController@adminIndex')->name('dashboard');
+	Route::post('/gettickets', 'Ticketing\AdminDashController@getTickets')->name('tickets');
+	//assigned tickets
+	Route::get('/showassigned', 'Ticketing\AdminAssigmentController@indexAssignments')->name('sassignment');
+	Route::post('/getassigned', 'Ticketing\AdminAssigmentController@getAssignments')->name('assignment');
+	//pop modal
 	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
 	Route::post('/pickupticket', 'Ticketing\PopTicketController@pickupTicket')->name('pickup');
-	Route::get('/showassigned', 'Ticketing\AdminAssigmentController@indexAssignments')->name('sassignment');
-	Route::get('/getassigned', 'Ticketing\AdminAssigmentController@getAssignments')->name('assignment');
+	//thread
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@indexThread')->name('thread');
+	Route::post('/getthread', 'Ticketing\ThreadController@getThread')->name('sthread');
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment');
+	//resolvedtickets
+	Route::get('/showresolved', 'Ticketing\AdminResolvedController@indexResolved')->name('sresolved');
+	Route::post('/getrestickets', 'Ticketing\AdminResolvedController@getResolved')->name('resolved');
+	//deletedtickets
+	Route::get('/showdeleted', 'Ticketing\AdminDeletedController@indexDeleted')->name('sdeleted');
+	Route::post('/getdeleted', 'Ticketing\AdminDeletedController@getDeleted')->name('deleted');
 });
 
 Route::fallback(function () {

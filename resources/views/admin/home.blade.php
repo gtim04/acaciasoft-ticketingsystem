@@ -3,41 +3,28 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Dashboard</div>
-
+                @include('layouts.cardnavs')
                 <div class="card-body">
-                    @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
+                    <h5>Ticket Pool</h5>
+                    <hr>
+                    <div>
+                        <table class="table table-bordered bg-light" id="ticket-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket code</th>
+                                    <th>Created by</th>
+                                    <th>Importance</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Submitted At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
-                    @endif
-
-                    <div class="container-fluid">
-                        <div class="pb-2">
-                            <a href="{{ route('admin.sassignment') }}" class="float-right btn btn-xs btn-success pull-right">Go to assignments</a>
-                        </div>
-                        <h5>Ticket Pool</h5>
-                        <hr>
-
-                        <div>
-                            <table class="table table-bordered bg-light" id="ticket-table">
-                                <thead>
-                                    <tr>
-                                        <th>Ticket code</th>
-                                        <th>Created by</th>
-                                        <th>Importance</th>
-                                        <th>Title</th>
-                                        <th>Status</th>
-                                        <th>Submitted At</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <hr>
-                    </div>
+                    <hr>
                 </div>
             </div>
         </div>
@@ -109,7 +96,10 @@
         $('#ticket-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! route('admin.tickets') !!}',
+            "ajax": {
+                "url": "{!! route('admin.tickets') !!}",
+                "type": "POST"
+            },
             columns: [{ 
                 data: 'code', name: 'code' 
             }, { 
@@ -153,39 +143,6 @@
             });
         });
 
-        // $('#show_tic').on('click', '.edit', function(){
-        //     var title, date, importance, date, time, pbody, id;
-
-        //     title = $('#title').val();
-        //     importance = $('#importance').val();
-        //     date = $('#date').val();
-        //     time = $('#time').val();
-        //     body = $('#pbody').val();
-        //     id = $('#tid').val();
-
-        //     $('#show_tic').modal('hide');
-
-        //     if(title !== '' && importance !== '' && date!== '' && time !== '' && body !== ''){
-        //         $.post('{!! route('user.edit') !!}',
-        //         {
-        //             title: title,
-        //             importance: importance,
-        //             date: date,
-        //             time: time,
-        //             body: body,
-        //             id: id
-        //         },
-        //         function(){
-        //             $('#success_tic').modal({
-        //                 show: true,
-        //                 backdrop: 'static',
-        //                 keyboard: false
-        //             });
-        //         });
-        //         e.preventDefault();
-        //     }
-        // });
-
         $('#show_tic').on('click', '.pick', function(){
 
             var id = $('#tid').val();
@@ -193,18 +150,18 @@
             $('#show_tic').modal('hide');
 
 
-                $.post('{!! route('admin.pickup') !!}',
-                {
-                    id: id
-                },
-                function(){
-                    $('#success_tic').modal({
-                        show: true,
-                        backdrop: 'static',
-                        keyboard: false
-                    });
+            $.post('{!! route('admin.pickup') !!}',
+            {
+                id: id
+            },
+            function(){
+                $('#success_tic').modal({
+                    show: true,
+                    backdrop: 'static',
+                    keyboard: false
                 });
-                e.preventDefault();
+            });
+            e.preventDefault();
         });
     });
 </script>

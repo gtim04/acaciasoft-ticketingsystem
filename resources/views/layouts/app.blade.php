@@ -16,7 +16,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ route(Route::currentRouteName()) }}">
+                <a class="navbar-brand" href="javascript:window.location.reload(true)">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -80,29 +80,29 @@
                         </div>
 
                         <h1 style="text-align:center;">
-                        <div class="checkmark-circle">
-                            <div class="background"></div>
-                            <div class="checkmark draw"></div>
-                        </div>
-                        <h1>
-                        </div>
+                            <div class="checkmark-circle">
+                                <div class="background"></div>
+                                <div class="checkmark draw"></div>
+                            </div>
+                            <h1>
+                            </div>
 
-                        <div class="pb-3 text-center">
-                            <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Go back to dashboard</a>
+                            <div class="pb-3 text-center">
+                                <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Go back to dashboard</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-    </div>
 
-    
 
-</body>
-<!-- Scripts -->
-<script src="{{ asset('js/app.js') }}"></script>
-@stack('scripts')
-</html>
+    </body>
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+    @stack('scripts')
+    </html>
 
 

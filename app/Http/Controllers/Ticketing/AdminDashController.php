@@ -9,9 +9,14 @@ use Yajra\Datatables\Datatables;
 
 class AdminDashController extends Controller
 {
+    protected function adminIndex()
+    {
+        return view('admin.home');
+    }
+    
     protected function getTickets(){
         $tickets = Ticket::with('user')
-                  ->where([['ticket_handler', '=', null], ['completed', '=', 0],])
+                  ->where([['status', '=', 'open'], ['isCompleted', '=', 0], ['isDeleted', '=', 0]])
                   ->get(); //join 2 tables
         return DataTables::of($tickets)
         ->addColumn('viewBtn', '<input type="button" class="view btn-primary" value="View Ticket">')

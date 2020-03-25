@@ -19,11 +19,11 @@ class CheckAdmin
     {
         if(Auth::check())
         {
-            if (auth()->user()->user_type == 'admin')
+            if (auth()->user()->role == 'admin')
             {
                 return $next($request);
             } 
-            else if (auth()->user()->user_type == 'client') 
+            else if (auth()->user()->role == 'client') 
             {
                 return redirect('user');
             }

@@ -3,39 +3,19 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+
+                @include('layouts.cardnavs')
 
                 <div class="card-body">
-                    @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                    @endif
-
                     <div class="container-fluid">
                         <div class="pb-2">
                             <a href="{{ route('user.newticket') }}" class="float-right btn btn-xs btn-success pull-right">Create a ticket</a>
                         </div>
-                        <h5>Welcome {{ Auth::user()->name }}! This is your current tickets.</h5>
+                        <h5>This is your open tickets</h5>
                         <hr>
-
-                        <div>
-                            <table class="table table-bordered bg-light" id="ticket-table">
-                                <thead>
-                                    <tr>
-                                        <th>Ticket code</th>
-                                        <th>Created by</th>
-                                        <th>Importance</th>
-                                        <th>Title</th>
-                                        <th>Status</th>
-                                        <th>Submitted At</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+                        @include('layouts.table')
                         <hr>
                     </div>
                 </div>
@@ -85,7 +65,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="resolved btn btn-success">Issue resolved</button>
+                <button type="button" class="delete btn btn-danger">Delete Ticket</button>
                 <button type="button" class="edit btn btn-primary">Save changes</button>
             </div>
         </div>
@@ -107,10 +87,13 @@
             }
         });
 
-        $('#ticket-table').DataTable({
+        $('#table-tickets').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! route('user.tickets') !!}',
+            "ajax": {
+                "url": "{!! route('user.tickets') !!}",
+                "type": "POST"
+            },
             columns: [{ 
                 data: 'code', name: 'code' 
             }, { 
@@ -129,7 +112,7 @@
 
         });
 
-        $('#ticket-table').on('click', '.view', function(){ 
+        $('#table-tickets').on('click', '.view', function(){ 
             var ticketCode = $(this).closest('tr').find('.sorting_1').text();
             // alert(ticketCode);
             $.post('{!! route('user.sticket') !!}',
@@ -187,25 +170,25 @@
             }
         });
 
-        $('#show_tic').on('click', '.resolved', function(){
+        $('#show_tic').on('click', '.delete', function(){
 
             var id = $('#tid').val();
 
             $('#show_tic').modal('hide');
 
 
-                $.post('{!! route('user.resolved') !!}',
-                {
-                    id: id
-                },
-                function(){
-                    $('#success_tic').modal({
-                        show: true,
-                        backdrop: 'static',
-                        keyboard: false
-                    });
+            $.post('{!! route('user.delete') !!}',
+            {
+                id: id
+            },
+            function(){
+                $('#success_tic').modal({
+                    show: true,
+                    backdrop: 'static',
+                    keyboard: false
                 });
-                e.preventDefault();
+            });
+            e.preventDefault();
         });
     });
 </script>

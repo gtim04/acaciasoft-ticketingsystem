@@ -5,12 +5,16 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
+
                 @include('layouts.cardnavs')
+
                 <div class="card-body">
-                    <h5>Assignment Pool</h5>
-                    <hr>
-                    @include('layouts.table')
-                    <hr>
+                    <div class="container-fluid">
+                        <h5>This is your resolved tickets</h5>
+                        <hr>
+                        @include('layouts.table')
+                        <hr>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,7 +67,6 @@
         </div>
     </div>
 </div><!-- modal end -->
-
 @endsection
 
 @push('scripts')
@@ -83,7 +86,7 @@
             processing: true,
             serverSide: true,
             "ajax": {
-                "url": "{!! route('admin.assignment') !!}",
+                "url": "{!! route('user.resolved') !!}",
                 "type": "POST"
             },
             columns: [{ 
@@ -98,7 +101,7 @@
                 data: 'status', name: 'status' 
             }, { 
                 data: 'created_at', name: 'created_at' 
-            }, { 
+            },{ 
                 data: 'viewBtn', name: 'viewBtn' 
             }],
 
@@ -106,8 +109,8 @@
 
         $('#table-tickets').on('click', '.view', function(){ 
             var ticketCode = $(this).closest('tr').find('.sorting_1').text();
-
-            $.post('{!! route('admin.sticket') !!}',
+            // alert(ticketCode);
+            $.post('{!! route('user.sticket') !!}',
             {
                 code: ticketCode
             },
@@ -130,7 +133,7 @@
         });
 
         $("#show_tic").on('click', '.thread', function(){
-            $(this).attr('href', '/admin/showthread/' + $('#tid').val());
+            $(this).attr('href', '/user/showthread/' + $('#tid').val());
         });
     });
 </script>

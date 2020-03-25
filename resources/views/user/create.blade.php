@@ -56,9 +56,13 @@
 @endsection
 
 @push('scripts')
+
 <script>
 	$(document).ready(function(){
-		
+
+		$('#date').attr('max', moment().format("YYYY-MM-DD"));
+		$('#date').attr('min', moment().subtract(1, 'months').format("YYYY-MM-DD"));
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

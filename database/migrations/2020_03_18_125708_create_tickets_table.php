@@ -22,11 +22,12 @@ class CreateTicketsTable extends Migration
             $table->text('title');
             $table->text('description');
             $table->dateTime('issue_date', 0);
-            $table->string('status', 20)->default('pending');
-            $table->boolean('completed')->default(0);
-            $table->boolean('deleted')->default(0);
+            $table->string('status', 20)->default('open');
+            $table->boolean('isCompleted')->default(0);
+            $table->boolean('isDeleted')->default(0);
             $table->timestamps();
-
+            
+            //foreign key
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
