@@ -116,13 +116,12 @@
 				$("#tcode").html('No thread created yet for this ticket comment below to start.');
 				$("#convo").html('No comments yet');
 			}
-
-			// testing if ticket is resolved
-			// if(jsonData[0]['ticket']['isCompleted'] !== 0 || jsonData[0]['ticket']['isDeleted'] !== 0){
-			// 	$('#resolved').html('Re-open this ticket?');
-			// 	$('#texteditor').remove();
-			// 	$('#submit').remove();
-			// }
+			
+			if(jsonData[0]['ticket']['isCompleted'] !== 0 || jsonData[0]['ticket']['isDeleted'] !== 0){
+				$('#resolved').html('Re-open this ticket?');
+				$('#texteditor').remove();
+				$('#submit').remove();
+			}
 		});
 
 		//submitting comment
