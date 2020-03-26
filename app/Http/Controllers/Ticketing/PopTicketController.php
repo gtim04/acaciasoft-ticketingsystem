@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ticketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ticket;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
 
 class PopTicketController extends Controller
@@ -23,7 +24,13 @@ class PopTicketController extends Controller
         $data->description = $request->body;
         $data->issue_date = $datetime;
         $data->save();
-        // return true;
+        // logs
+        $log = new Comment();
+        $log->content = "Ticket edited - by: ".auth()->user()->name;
+        $log->ticket_id = $request->id;
+        $log->user_id = auth()->user()->id;
+        $log->isLog = 1;
+        $log->save();
     }
 
     protected function deleteTicket(Request $request){
@@ -32,7 +39,13 @@ class PopTicketController extends Controller
         $data->isDeleted = 1;
         $data->status = 'deleted';
         $data->save();
-        // return true;
+        // logs
+        $log = new Comment();
+        $log->content = "Ticket deleted - by: ".auth()->user()->name;
+        $log->ticket_id = $request->id;
+        $log->user_id = auth()->user()->id;
+        $log->isLog = 1;
+        $log->save();
     }
 
     protected function pickupTicket(Request $request){
@@ -41,5 +54,12 @@ class PopTicketController extends Controller
         $data->ticket_handler = Auth::id();
         $data->status = 'Pending';
         $data->save();
+        //logs
+        $log = new Comment();
+        $log->content = "Ticket fetched - by: ".auth()->user()->name;
+        $log->ticket_id = $request->id;
+        $log->user_id = auth()->user()->id;
+        $log->isLog = 1;
+        $log->save();
     }
 }

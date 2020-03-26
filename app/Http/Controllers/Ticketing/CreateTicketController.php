@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ticketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ticket;
+use App\Comment;
 
 class CreateTicketController extends Controller
 {
@@ -37,5 +38,12 @@ class CreateTicketController extends Controller
         $data->description = $request->body;
         $data->issue_date = $datetime;
         $data->save();
+        //updating logs
+        $log = new Comment();
+        $log->content = "Ticket opened - by: ".auth()->user()->name;
+        $log->user_id = auth()->user()->id;
+        $log->ticket_id = $data->id;
+        $log->isLog = 1;
+        $log->save();
     }
 }

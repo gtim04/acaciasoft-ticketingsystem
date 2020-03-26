@@ -14,7 +14,7 @@
 					</div>
 					<hr>
 					<div id="convo">
-					<!-- card -->
+						<!-- card -->
 					</div>
 					<hr>
 					<div>
@@ -100,24 +100,26 @@
 			id: id
 		},
 		function(data){
-			// alert('test');
-			var jsonData = data;
-			var convo = '';
-			// console.log(jsonData);
-			// // loading convo
-			if(jsonData.length > 0){
-				$.each(jsonData, function(index){
-					convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (jsonData[index]['user']['id'] == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(jsonData[index]['user']['id'] == userid ? 'You said:' : ''+jsonData[index]['user']['name']+' said:')+'</h6></div> <div class="card-body">'+jsonData[index]['content']+' <footer class="mt-1 blockquote-footer">'+moment(jsonData[index]['created_at']).format('lll')+'</footer> </div></div></div>');
+			var comments = data[0].comment;
+			var  convo = '';
+			// loading convo
+			if(comments.length > 0){
+				$.each(comments, function(index){
+					if(comments[index].isLog == 1){
+						convo += ('<div class="'+(comments[index].user.id == userid ? 'p-1 container text-right' : 'p1 container')+'"><small class="bg-light"><b><i>*'+comments[index].content+' at '+moment(comments[index].created_at).format('lll')+'</i></b></small></div>');
+					} else {
+						convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (comments[index].user.id == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(comments[index].user.id == userid ? 'You said:' : ''+ comments[index].user.name +' said:')+'</h6></div> <div class="card-body">'+comments[index].content+' <footer class="mt-1 blockquote-footer">'+moment(comments[index].created_at).format('lll')+'</footer> </div></div></div>');
+					}
 				});
 				$("#convo").html(convo);
-				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +jsonData[0]['ticket']['code']+'</button>');
-				$("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
+				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +data[0]['code']+'</button>');
+				$("#lastUp").html('Last updated: ' +moment(data[0]['created_at']).format('lll'));
 			}  else {
-				$("#tcode").html('No thread created yet for this ticket comment below to start.');
-				$("#convo").html('No comments yet');
+				$("#tcode").html('Sorry no comments for this ticket.');
+				$("#convo").html('No comments yet.');
 			}
 			
-			if(jsonData[0]['ticket']['isCompleted'] !== 0 || jsonData[0]['ticket']['isDeleted'] !== 0){
+			if(data[0]['isCompleted'] !== 0 || data[0]['isDeleted'] !== 0){
 				$('#resolved').html('Re-open this ticket?');
 				$('#texteditor').remove();
 				$('#submit').remove();
@@ -146,42 +148,42 @@
 
 		//viewing of ticket
 		$('.card').on('click', '#view', function(){ 
-            var ticketCode = $('#view').html();
-            $.post('{!! route('admin.sticket') !!}',
-            {
-                code: ticketCode
-            },
-            function(data){
-                var ticket = JSON.parse(data);
-                $('#show_tic').modal({
-                    show: true,
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $('.modal-title').html("Ticket: " +ticket['code']);
-                $('#title').val(ticket['title']);
-                $('#pbody').html(ticket['description']);
-                $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
-                $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
-                $('#tid').val(ticket['id']);
-                $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
-            });
-        });
+			var ticketCode = $('#view').html();
+			$.post('{!! route('admin.sticket') !!}',
+			{
+				code: ticketCode
+			},
+			function(data){
+				var ticket = JSON.parse(data);
+				$('#show_tic').modal({
+					show: true,
+					backdrop: 'static',
+					keyboard: false
+				});
+				$('.modal-title').html("Ticket: " +ticket['code']);
+				$('#title').val(ticket['title']);
+				$('#pbody').html(ticket['description']);
+				$('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
+				$('#time').val(moment(ticket['issue_date']).format('HH:mm'));
+				$('#tid').val(ticket['id']);
+				$('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
+			});
+		});
 
 	});
 
 	//texteditor
-		var quill = new quill('#editor', {
-					modules: {
-						toolbar: [
+	var quill = new quill('#editor', {
+		modules: {
+			toolbar: [
 
-						[{ header: [1, 2, false] }],
-						['bold', 'italic', 'underline', 'link', 'strike']
+			[{ header: [1, 2, false] }],
+			['bold', 'italic', 'underline', 'link', 'strike']
 
-						]
-					},
-					placeholder: 'What can we help you with?',
-								  theme: 'snow'
-					});
+			]
+		},
+		placeholder: 'What can we help you with?',
+		theme: 'snow'
+	});
 </script>
 @endpush

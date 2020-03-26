@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Ticketing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ticket;
-use App\User;
 use App\Comment;
 
 class ThreadController extends Controller
@@ -22,10 +21,8 @@ class ThreadController extends Controller
 
 
      protected function getThread(Request $request) {
-        $comments = Comment::with('ticket', 'user')
-                    ->where('ticket_id', $request->id)
-                    ->get();
-    	return $comments;
+        $tcomment = Ticket::where('id', $request->id)->with('comment.user')->get();
+    	return $tcomment;
     }
 
 
@@ -44,6 +41,13 @@ class ThreadController extends Controller
         $data->isCompleted = 1;
         $data->status = 'resolved';
         $data->save();
+        //logs
+        $log = new Comment();
+        $log->content = "Ticket marked solved - by: ".auth()->user()->name;
+        $log->ticket_id = $request->id;
+        $log->user_id = auth()->user()->id;
+        $log->isLog = 1;
+        $log->save();
     }
 
     protected function reopenTicket(Request $request){
@@ -53,5 +57,12 @@ class ThreadController extends Controller
         $data->isDeleted = 0;
         $data->status = 'open';
         $data->save();
+        //logs
+        $log = new Comment();
+        $log->content = "Ticket re-opened - by: ".auth()->user()->name;
+        $log->ticket_id = $request->id;
+        $log->user_id = auth()->user()->id;
+        $log->isLog = 1;
+        $log->save();
     }
 }

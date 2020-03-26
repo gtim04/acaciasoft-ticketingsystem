@@ -18,6 +18,7 @@ class CreateCommentsTable extends Migration
             $table->string('content');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ticket_id');
+            $table->boolean('isLog')->default(0);
             $table->timestamps();
             //foreign key
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
