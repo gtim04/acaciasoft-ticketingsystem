@@ -46,7 +46,7 @@
                     <input type="hidden" id="tid">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" placeholder="e.g: [HELP] Server is down" required>
+                        <input type="text" class="form-control" id="title" placeholder="e.g: [HELP] Server is down" disabled required>
                     </div>
                     <div class="form-group">
                         <label for="importance">Importance</label>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pbody">Description</label>
-                        <textarea class="form-control" id="pbody" rows="3" readonly></textarea>
+                        <div class="card-body border " id="pbody"></div>
                         <small id="uplog"></small>
                     </div>
                 </form>
@@ -135,7 +135,7 @@
                 });
                 $('.modal-title').html("Ticket: " +ticket['code']);
                 $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
+                $('#pbody').html(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);

@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pbody">Description</label>
-                        <textarea class="form-control" id="pbody" rows="3" required></textarea>
+                        <div id="editor" style="height: 200px"></div>
                         <small id="uplog"></small>
                     </div>
                 </form>
@@ -129,7 +129,7 @@
                 });
                 $('.modal-title').html("Ticket: " +ticket['code']);
                 $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
+                quill.clipboard.dangerouslyPasteHTML(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);
@@ -144,7 +144,7 @@
             importance = $('#importance').val();
             date = $('#date').val();
             time = $('#time').val();
-            body = $('#pbody').val();
+            body = quill.root.innerHTML;
             id = $('#tid').val();
 
             $('#show_tic').modal('hide');
@@ -191,5 +191,19 @@
             e.preventDefault();
         });
     });
+
+    //texteditor
+        var quill = new quill('#editor', {
+                    modules: {
+                        toolbar: [
+
+                        [{ header: [1, 2, false] }],
+                        ['bold', 'italic', 'underline', 'link', 'strike']
+
+                        ]
+                    },
+                    placeholder: 'What can we help you with?',
+                                  theme: 'snow'
+                    });
 </script>
 @endpush

@@ -17,14 +17,13 @@ class ThreadController extends Controller
     }
 
     protected function indexUserThread($id) {
-        return view('user.thread', [
-            'data' => $id
-        ]);
+        return view('user.thread')->with('data', $id);
     }
 
 
-     protected function getThread(Request $request) {
-		$info = Ticket::find($request->id)->comment()->with('user', 'ticket')->get();
+     protected function getThread() {
+		$info = Comment::find(1)->with('ticket', 'user')->get();
+        // dd($info);
     	return $info;
     }
 

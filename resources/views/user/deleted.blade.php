@@ -56,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pbody">Description</label>
-                        <textarea class="form-control" id="pbody" rows="3" readonly></textarea>
+                        <div class="card-body border " id="pbody"></div>
                         <small id="uplog"></small>
                     </div>
                 </form>
@@ -109,7 +109,6 @@
 
         $('#table-tickets').on('click', '.view', function(){ 
             var ticketCode = $(this).closest('tr').find('.sorting_1').text();
-            // alert(ticketCode);
             $.post('{!! route('user.sticket') !!}',
             {
                 code: ticketCode
@@ -123,7 +122,7 @@
                 });
                 $('.modal-title').html("Ticket: " +ticket['code']);
                 $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
+                $('#pbody').html(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);

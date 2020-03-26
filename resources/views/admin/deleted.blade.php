@@ -56,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pbody">Description</label>
-                        <textarea class="form-control" id="pbody" rows="3" readonly></textarea>
+                        <div class="card-body border " id="pbody"></div>
                         <small id="uplog"></small>
                     </div>
                 </form>
@@ -109,31 +109,6 @@
 
         $('#table-tickets').on('click', '.view', function(){ 
             var ticketCode = $(this).closest('tr').find('.sorting_1').text();
-            // alert(ticketCode);
-            $.post('{!! route('admin.sdeleted') !!}',
-            {
-                code: ticketCode
-            },
-            function(data){
-                var ticket = JSON.parse(data);
-                // alert(ticket['code']);
-                $('#show_tic').modal({
-                    show: true,
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $('.modal-title').html("Ticket: " +ticket['code']);
-                $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
-                $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
-                $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
-                $('#tid').val(ticket['id']);
-                $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
-            });
-        });
-
-        $('#table-tickets').on('click', '.view', function(){ 
-            var ticketCode = $(this).closest('tr').find('.sorting_1').text();
             $.post('{!! route('admin.sticket') !!}',
             {
                 code: ticketCode
@@ -147,7 +122,7 @@
                 });
                 $('.modal-title').html("Ticket: " +ticket['code']);
                 $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
+                $('#pbody').html(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);

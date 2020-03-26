@@ -11,6 +11,6 @@ class Ticket extends Model
     }
 
     public function comment(){
-    	return $this->belongsToMany(Comment::class, 'comment_ticket')->using(CommentTicket::class);
+    	return $this->hasMany(Comment::class);
     }
 }

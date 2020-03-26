@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     public function ticket(){
-    	return $this->belongsToMany(Ticket::class, 'comment_ticket')->using(CommentTicket::class);
+    	return $this->belongsTo(Ticket::class);
     }
 
     public function user(){

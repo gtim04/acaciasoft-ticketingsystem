@@ -23,9 +23,11 @@
 					<div>
 						<form>
 							@csrf
-							<div class="form-group">
-								<label for="comment">Type your comment here:</label>
-								<textarea class="form-control" id="comment" rows="3" required></textarea>
+							<div id="texteditor">
+								<div class="form-group">
+									<label for="editor">Type your comment here:</label>
+									<div id="editor" style="height: 200px"></div>
+								</div>
 							</div>
 							<a href="{{ route('user.dashboard') }}" class="btn btn-danger">Back to your tickets</a>
 							<button id="submit" class="btn btn-primary float-right">Submit</button>
@@ -72,8 +74,7 @@
 					</div>
 					<div class="form-group">
 						<label for="pbody">Description</label>
-						<textarea class="form-control" id="pbody" rows="3" readonly></textarea>
-						<small id="uplog"></small>
+						<div class="card-body border " id="pbody"></div>
 					</div>
 				</form>
 			</div>
@@ -104,33 +105,32 @@
 			id: id
 		},
 		function(data){
-			
+			console.log(JSON.parse(data));
 			var jsonData = data;
 			var convo = '';
-			
 			//loading convo
-			if(jsonData.length > 0){
-				$.each(jsonData, function(index){
-					convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (jsonData[index]['user']['id'] == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(jsonData[index]['user']['id'] == userid ? 'You said:' : ''+jsonData[index]['user']['name']+' said:')+'</h6></div> <div class="card-body">'+jsonData[index]['content']+' <footer class="mt-1 blockquote-footer">'+moment(jsonData[index]['created_at']).format('lll')+'</footer> </div></div></div>');
-				});
-				$("#convo").html(convo);
-				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +jsonData[0]['ticket'][0]['code']+'</button>');
-				$("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
-			}  else {
-				$("#tcode").html('No thread created yet for this ticket comment below to start.');
-				$("#convo").html('No comments yet');
-			}
+			// if(jsonData.length > 0){
+			// 	$.each(jsonData, function(index){
+			// 		convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (jsonData[index]['user']['id'] == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(jsonData[index]['user']['id'] == userid ? 'You said:' : ''+jsonData[index]['user']['name']+' said:')+'</h6></div> <div class="card-body">'+jsonData[index]['content']+' <footer class="mt-1 blockquote-footer">'+moment(jsonData[index]['created_at']).format('lll')+'</footer> </div></div></div>');
+			// 	});
+			// 	$("#convo").html(convo);
+			// 	$("#tcode").html('Thread for: <button id="view" class="bg-light">' +jsonData[0]['ticket'][0]['code']+'</button>');
+			// 	$("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
+			// }  else {
+			// 	$("#tcode").html('No thread created yet for this ticket comment below to start.');
+			// 	$("#convo").html('No comments yet');
+			// 	//testing if ticket is resolved
+			// }
 
-			//testing if ticket is resolved
-			if(jsonData[0]['ticket'][0]['isCompleted'] !== 0 || jsonData[0]['ticket'][0]['isDeleted'] !== 0){
-				$('#resolved').html('Re-open this ticket?');
-				$('#comment').prop('disabled', true);
-				$('#submit').prop('disabled', true);
-			}
+			// if(jsonData[0]['ticket'][0]['isCompleted'] !== 0 || jsonData[0]['ticket'][0]['isDeleted'] !== 0){
+			// 	$('#resolved').html('Re-open this ticket?');
+			// 	$('#texteditor').remove();
+			// 	$('#submit').remove();
+			// }
 		});
 		//submit comment
 		$("#submit").on("click", function(e){
-			var textarea = $('#comment').val();
+			var textarea = quill.root.innerHTML;
 			if(textarea !== ''){
 				$(this).attr('disabled', true);
 				$(this).html('submitting');
@@ -163,7 +163,7 @@
                 });
                 $('.modal-title').html("Ticket: " +ticket['code']);
                 $('#title').val(ticket['title']);
-                $('#pbody').val(ticket['description']);
+                $('#pbody').html(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);
@@ -200,5 +200,19 @@
             
         });
 	});
+
+	//texteditor
+		var quill = new quill('#editor', {
+					modules: {
+						toolbar: [
+
+						[{ header: [1, 2, false] }],
+						['bold', 'italic', 'underline', 'link', 'strike']
+
+						]
+					},
+					placeholder: 'What can we help you with?',
+								  theme: 'snow'
+					});
 </script>
 @endpush

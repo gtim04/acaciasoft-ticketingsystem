@@ -38,8 +38,8 @@
 								<input type="time" class="form-control" id="time" required>
 							</div>
 							<div class="form-group">
-								<label for="pbody">Body</label>
-								<textarea class="form-control" id="pbody" rows="3" placeholder="What can we help you with?" required></textarea>
+								<label for="editor">Body</label>
+								<div id="editor" style="height: 200px"></div>
 							</div>
 							<div class="form-group">
 								<a href="{{ route('user.dashboard') }}" class="btn btn-danger float-left">Discard Ticket</a>
@@ -56,13 +56,11 @@
 @endsection
 
 @push('scripts')
-
 <script>
 	$(document).ready(function(){
-
+		//setmax dates
 		$('#date').attr('max', moment().format("YYYY-MM-DD"));
 		$('#date').attr('min', moment().subtract(1, 'months').format("YYYY-MM-DD"));
-
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -70,14 +68,14 @@
 		});
 
 		$("#submit").on("click", function(e){
-
-			var title, date, importance, date, time, pbody;
+			
+			var title, date, importance, date, time;
 
 			title = $('#title').val();
 			importance = $('#importance').val();
 			date = $('#date').val();
 			time = $('#time').val();
-			body = $('#pbody').val();
+			body = quill.root.innerHTML;
 
 			if(title !== '' && importance !== '' && date!== '' && time !== '' && body !== ''){
 				$.post('{!! route('user.submit') !!}',
@@ -95,10 +93,25 @@
 						keyboard: false
 					});
 				});
-
-				e.preventDefault();
 			}
+
+			e.preventDefault();
 		});
 	});
+
+	//texteditor
+		var quill = new quill('#editor', {
+					modules: {
+						toolbar: [
+
+						[{ header: [1, 2, false] }],
+						['bold', 'italic', 'underline', 'link', 'strike']
+
+						]
+					},
+					placeholder: 'What can we help you with?',
+								  theme: 'snow'
+					});
 </script>
+
 @endpush
