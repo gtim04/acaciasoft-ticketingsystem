@@ -21,10 +21,11 @@ class ThreadController extends Controller
     }
 
 
-     protected function getThread() {
-		$info = Comment::find(1)->with('ticket', 'user')->get();
-        // dd($info);
-    	return $info;
+     protected function getThread(Request $request) {
+        $comments = Comment::with('ticket', 'user')
+                    ->where('ticket_id', $request->id)
+                    ->get();
+    	return $comments;
     }
 
 
@@ -32,10 +33,9 @@ class ThreadController extends Controller
 		// adding comments
 		$comment = new Comment();
 		$comment->content = $request->comment;
-		$comment->user_id = auth()->user()->id;
+        $comment->user_id = auth()->user()->id;
+        $comment->ticket_id = $request->id;
 		$comment->save();
-		//fill linking table
-		$comment->ticket()->attach($request->id);
 	}
 
     protected function resolveTicket(Request $request){

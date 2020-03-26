@@ -94,35 +94,38 @@
 
 		var id = $('#ticketid').val(); 
 		var userid = $("#userid").val();
+
 		$.post('{!! route('admin.sthread') !!}',
 		{
 			id: id
 		},
 		function(data){
+			// alert('test');
 			var jsonData = data;
 			var convo = '';
-			
-			// loading convo
+			// console.log(jsonData);
+			// // loading convo
 			if(jsonData.length > 0){
 				$.each(jsonData, function(index){
 					convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (jsonData[index]['user']['id'] == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(jsonData[index]['user']['id'] == userid ? 'You said:' : ''+jsonData[index]['user']['name']+' said:')+'</h6></div> <div class="card-body">'+jsonData[index]['content']+' <footer class="mt-1 blockquote-footer">'+moment(jsonData[index]['created_at']).format('lll')+'</footer> </div></div></div>');
 				});
 				$("#convo").html(convo);
 				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +jsonData[0]['ticket']['code']+'</button>');
-				$("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
+				// $("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
 			}  else {
 				$("#tcode").html('No thread created yet for this ticket comment below to start.');
 				$("#convo").html('No comments yet');
 			}
 
 			// testing if ticket is resolved
-			if(jsonData[0]['ticket']['isCompleted'] !== 0 || jsonData[0]['ticket']['isDeleted'] !== 0){
-				$('#resolved').html('Re-open this ticket?');
-				$('#texteditor').remove();
-				$('#submit').remove();
-			}
+			// if(jsonData[0]['ticket']['isCompleted'] !== 0 || jsonData[0]['ticket']['isDeleted'] !== 0){
+			// 	$('#resolved').html('Re-open this ticket?');
+			// 	$('#texteditor').remove();
+			// 	$('#submit').remove();
+			// }
 		});
 
+		//submitting comment
 		$("#submit").on("click", function(e){
 			var textarea = quill.root.innerHTML;
 			if(textarea !== ''){
@@ -165,6 +168,7 @@
                 $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
             });
         });
+
 	});
 
 	//texteditor
