@@ -111,7 +111,7 @@
 				});
 				$("#convo").html(convo);
 				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +jsonData[0]['ticket']['code']+'</button>');
-				// $("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
+				$("#lastUp").html('Last updated: ' +moment(jsonData[0]['created_at']).format('lll'));
 			}  else {
 				$("#tcode").html('No thread created yet for this ticket comment below to start.');
 				$("#convo").html('No comments yet');
