@@ -9,22 +9,15 @@ use App\Comment;
 
 class ThreadController extends Controller
 {
-    protected function indexThread($id) {
-    	return view('admin.thread', [
-    		'data' => $id
-    	]);
+    protected function userThread($id) {
+    	$data = Comment::where('ticket_id', $id)->with('ticket.user')->paginate(7);
+        return view('user.thread', compact('data'));
     }
 
-    protected function indexUserThread($id) {
-        return view('user.thread')->with('data', $id);
+    protected function adminThread($id) {
+        $data = Comment::where('ticket_id', $id)->with('ticket.user')->paginate(7);
+        return view('admin.thread', compact('data'));
     }
-
-
-     protected function getThread(Request $request) {
-        $tcomment = Ticket::where('id', $request->id)->with('comment.user')->get();
-    	return $tcomment;
-    }
-
 
 	protected function addComment(Request $request) {
 		// adding comments
@@ -33,6 +26,8 @@ class ThreadController extends Controller
         $comment->user_id = auth()->user()->id;
         $comment->ticket_id = $request->id;
 		$comment->save();
+        $comment = $comment->where('ticket_id', $request->id)->paginate(7);
+        return $request->id . '?page=' . $comment->lastPage();
 	}
 
     protected function resolveTicket(Request $request){

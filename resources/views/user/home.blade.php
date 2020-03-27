@@ -66,6 +66,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="delete btn btn-danger">Delete Ticket</button>
+                <a href="#" class="thread btn btn-dark">Show Thread</a>
                 <button type="button" class="edit btn btn-primary">Save changes</button>
             </div>
         </div>
@@ -81,11 +82,6 @@
 
 <script>
     $(document).ready(function(){
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
 
         $('#table-tickets').DataTable({
             processing: true,
@@ -189,6 +185,10 @@
                 });
             });
             e.preventDefault();
+        });
+
+        $("#show_tic").on('click', '.thread', function(){
+            $(this).attr('href', '/user/showthread/' + $('#tid').val());
         });
     });
 

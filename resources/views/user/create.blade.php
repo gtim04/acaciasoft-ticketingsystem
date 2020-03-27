@@ -61,12 +61,7 @@
 		//setmax dates
 		$('#date').attr('max', moment().format("YYYY-MM-DD"));
 		$('#date').attr('min', moment().subtract(1, 'months').format("YYYY-MM-DD"));
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
+		
 		$("#submit").on("click", function(e){
 			
 			var title, date, importance, date, time;

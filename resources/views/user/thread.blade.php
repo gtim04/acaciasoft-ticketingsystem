@@ -6,32 +6,61 @@
 		<div class="col-md-8">
 			<div class="card">
 				<div class="card-header">
-					<h4 id="tcode"></h4>
-				</div>
-				<div class="card-body">
-					<div>
-						<h5 id="lastUp"></h5>
-					</div>
-					<hr>
+					@foreach ($data as $ticket)
+						<h4><b>Thread for:</b> <button id="view" class="bg-light">{{$ticket->ticket->code}}</button></h4>
+						<input type="hidden" id="ticketid" value="{{$ticket->ticket->id}}">
+						</div>
+						<div class="card-body">
+							<div>
+								<h5><b>Ticket Title: {{$ticket->ticket->title}}</b></h5>
+						</div>
+						<hr>
+						@break
+					@endforeach
+				
 					<div id="convo">
-						<!-- card -->
+						@foreach ($data as $comment)
+							@if(count($data) > 0)
+								@if($comment->isLog == 1)
+									<div class="{{$comment->user->id === auth()->user()->id ? 'p-1 container text-right' : 'p-1 container'}}"><small class="bg-light"><b><i>*{{$comment->content}} at {{$comment->created_at}}</i></b></small></div>
+								@else
+									<div class="container col-md-12 p-2"> <div class="card"> <div class="{{$comment->user->id === auth()->user()->id ? 'card-header bg-success' : 'card-header bg-info'}}"><h6>{{$comment->user->id === auth()->user()->id ? 'You said:' : $comment->user->name.' said:'}}</h6></div><div class="card-body">{!! $comment->content !!}<footer class="mt-1 blockquote-footer">{{$comment->created_at}}</footer></div></div></div>
+								@endif
+							@endif
+						@endforeach
 					</div>
+					<div class="row justify-content-center">{{ $data->links() }}</div>
 					<div class="text-center">
-						<button id="resolved" class="mt-3 btn btn-success">Issue Resolved?</button>
+						@foreach ($data as $ticket)
+							@if($ticket->ticket->status == 'deleted' || $ticket->ticket->status == 'resolved')
+								<button id="resolved" class="mt-3 btn btn-success">Re-open ticket?</button>
+							@else
+								<button id="resolved" class="mt-3 btn btn-success">Issue Resolved?</button>
+							@endif
+							@break
+						@endforeach
 					</div>
 					<hr>
 					<div>
 						<form>
-							@csrf
-							<div id="texteditor">
-								<div class="form-group">
-									<label for="editor">Type your comment here:</label>
-									<div id="editor" style="height: 200px"></div>
-								</div>
-							</div>
+							@foreach ($data as $ticket)
+								@if($ticket->ticket->status == 'deleted' || $ticket->ticket->status == 'resolved')
+								@else
+									<div id="texteditor">
+										<div class="form-group">
+											<label for="editor">Type your comment here:</label>
+											<div id="editor" style="height: 200px"></div>
+										</div>
+									</div>
+									<button id="submit" class="btn btn-primary float-right">Submit</button>
+								@endif
+								@break
+							@endforeach
 							<a href="{{ route('user.dashboard') }}" class="btn btn-danger">Back to your tickets</a>
-							<button id="submit" class="btn btn-primary float-right">Submit</button>
 						</form>
+					</div>
+					<div class="text-center">
+						<a href="#" class="link">Back to top</a>
 					</div>
 				</div>
 			</div>
@@ -81,55 +110,18 @@
 		</div>
 	</div>
 </div><!-- modal end -->
-<input type="hidden" id="ticketid" value="{{$data}}">
+
 <input type="hidden" id="userid" value="{{auth()->user()->id}}">
+
 @endsection
 
 @push('scripts')
 <script>
 	$(document).ready(function () {
-		//setupajax
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
 		//variable dec
 		var id = $('#ticketid').val(); 
 		var userid = $("#userid").val();
 
-		//getting threads
-		$.post('{!! route('user.sthread') !!}',
-		{
-			id: id
-		},
-		function(data){
-			var comments = data[0].comment;
-			var  convo = '';
-			// loading convo
-			if(comments.length > 0){
-				$.each(comments, function(index){
-					if(comments[index].isLog == 1){
-						convo += ('<div class="'+(comments[index].user.id == userid ? 'p-1 container text-right' : 'p1 container')+'"><small class="bg-light"><b><i>*'+comments[index].content+' at '+moment(comments[index].created_at).format('lll')+'</i></b></small></div>');
-					} else {
-						convo += ('<div class="container col-md-12 p-2"> <div class="card"> <div class="'+ (comments[index].user.id == userid ? 'card-header bg-success' : 'card-header bg-info') +'"><h6>'+(comments[index].user.id == userid ? 'You said:' : ''+ comments[index].user.name +' said:')+'</h6></div> <div class="card-body">'+comments[index].content+' <footer class="mt-1 blockquote-footer">'+moment(comments[index].created_at).format('lll')+'</footer> </div></div></div>');
-					}
-				});
-				$("#convo").html(convo);
-				$("#tcode").html('Thread for: <button id="view" class="bg-light">' +data[0]['code']+'</button>');
-				$("#lastUp").html('Last updated: ' +moment(data[0]['created_at']).format('lll'));
-			}  else {
-				$("#tcode").html('Sorry no comments for this ticket.');
-				$("#convo").html('No comments yet.');
-			}
-			
-			if(data[0]['isCompleted'] !== 0 || data[0]['isDeleted'] !== 0){
-				$('#resolved').html('Re-open this ticket?');
-				$('#texteditor').remove();
-				$('#submit').remove();
-			}
-		});
 		//submit comment
 		$("#submit").on("click", function(e){
 			var textarea = quill.root.innerHTML;
@@ -143,12 +135,13 @@
 				},
 				function(data){
 					setTimeout(function(){ 
-						location.reload();
-					}, 700);
+						window.location.replace(data);
+					}, 900);
 				});
 				e.preventDefault();
 			}
 		});
+
 		//viewing of ticket
 		$('.card').on('click', '#view', function(){ 
 			var ticketCode = $('#view').html();
@@ -199,7 +192,6 @@
 					});
 				});
 			}
-			
 		});
 	});
 

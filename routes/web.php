@@ -41,9 +41,8 @@ Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'use
 	Route::get('/showdeleted', 'Ticketing\UserDeletedController@indexDeleted')->name('sdeleted');
 	Route::post('/getdeleted', 'Ticketing\UserDeletedController@getDeleted')->name('deleted');
 	//thread
-	Route::get('/showthread/{id}', 'Ticketing\ThreadController@indexUserThread')->name('thread');
-	Route::post('/getthread', 'Ticketing\ThreadController@getThread')->name('sthread');
-	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment');
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@userThread')->name('thread')->middleware('thread');
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
 	//resolving tickets
 	Route::post('/issueresolved', 'Ticketing\ThreadController@resolveTicket')->name('complete');
 
@@ -62,9 +61,8 @@ Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'ad
 	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
 	Route::post('/pickupticket', 'Ticketing\PopTicketController@pickupTicket')->name('pickup');
 	//thread
-	Route::get('/showthread/{id}', 'Ticketing\ThreadController@indexThread')->name('thread');
-	Route::post('/getthread', 'Ticketing\ThreadController@getThread')->name('sthread');
-	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment');
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@adminThread')->name('thread')->middleware('thread');
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
 	//resolvedtickets
 	Route::get('/showresolved', 'Ticketing\AdminResolvedController@indexResolved')->name('sresolved');
 	Route::post('/getrestickets', 'Ticketing\AdminResolvedController@getResolved')->name('resolved');
