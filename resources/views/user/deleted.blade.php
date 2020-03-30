@@ -31,8 +31,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="ticketForm">
-                    @csrf
                     <input type="hidden" id="tid">
                     <div class="form-group">
                         <label for="title">Title</label>
@@ -76,7 +74,6 @@
 
 <script>
     $(document).ready(function(){
-        
         $('#table-tickets').DataTable({
             processing: true,
             serverSide: true,
@@ -120,13 +117,14 @@
                 $('#pbody').html(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
-                $('#tid').val(ticket['id']);
                 $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
-            });
-        });
 
-        $("#show_tic").on('click', '.thread', function(){
-            $(this).attr('href', '/user/showthread/' + $('#tid').val());
+                ticketid = ticket['id'];
+                //route placeholder
+                route = "{{route('user.thread', ":ticketid")}}";
+                route = route.replace(':ticketid', ticketid);
+                $('.thread').attr('href', route);
+            });
         });
     });
 </script>

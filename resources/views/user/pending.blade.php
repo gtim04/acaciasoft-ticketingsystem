@@ -124,11 +124,13 @@
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
                 $('#tid').val(ticket['id']);
                 $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
-            });
-        });
 
-        $("#show_tic").on('click', '.thread', function(){
-            $(this).attr('href', '/user/showthread/' + $('#tid').val());
+                ticketid = ticket['id'];
+                //route placeholder
+                route = "{{route('user.thread', ":ticketid")}}";
+                route = route.replace(':ticketid', ticketid);
+                $('.thread').attr('href', route);
+            });
         });
     });
 </script>

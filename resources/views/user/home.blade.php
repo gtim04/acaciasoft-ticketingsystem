@@ -35,8 +35,6 @@
             </div>
             <div class="modal-body">
                 <form id="ticketForm">
-                    @csrf
-                    <input type="hidden" id="tid">
                     <div class="form-group">
                         <label for="title">Title</label>
                         <input type="text" class="form-control" id="title" placeholder="e.g: [HELP] Server is down" required>
@@ -82,7 +80,6 @@
 
 <script>
     $(document).ready(function(){
-
         $('#table-tickets').DataTable({
             processing: true,
             serverSide: true,
@@ -110,7 +107,7 @@
 
         $('#table-tickets').on('click', '.view', function(){ 
             var ticketCode = $(this).closest('tr').find('.sorting_1').text();
-            // alert(ticketCode);
+            
             $.post('{!! route('user.sticket') !!}',
             {
                 code: ticketCode
@@ -128,20 +125,23 @@
                 quill.clipboard.dangerouslyPasteHTML(ticket['description']);
                 $('#date').val(moment(ticket['issue_date']).format('YYYY-MM-DD'));
                 $('#time').val(moment(ticket['issue_date']).format('HH:mm'));
-                $('#tid').val(ticket['id']);
                 $('#uplog').text("Last updated: " +moment(ticket['updated_at']).format('lll'));
+                ticketid = ticket['id'];
+                //route placeholder
+                route = "{{route('user.thread', ":ticketid")}}";
+                route = route.replace(':ticketid', ticketid);
+                $('.thread').attr('href', route);
             });
         });
 
-        $('#show_tic').on('click', '.edit', function(){
-            var title, date, importance, date, time, pbody, id;
+        $('#show_tic').on('click', '.edit', function(e){
+            var title, date, importance, date, time, pbody;
 
             title = $('#title').val();
             importance = $('#importance').val();
             date = $('#date').val();
             time = $('#time').val();
             body = quill.root.innerHTML;
-            id = $('#tid').val();
 
             $('#show_tic').modal('hide');
 
@@ -153,7 +153,7 @@
                     date: date,
                     time: time,
                     body: body,
-                    id: id
+                    id: ticketid
                 },
                 function(){
                     $('#success_tic').modal({
@@ -168,14 +168,12 @@
 
         $('#show_tic').on('click', '.delete', function(){
 
-            var id = $('#tid').val();
-
             $('#show_tic').modal('hide');
 
 
             $.post('{!! route('user.delete') !!}',
             {
-                id: id
+                id: ticketid
             },
             function(){
                 $('#success_tic').modal({
@@ -185,10 +183,6 @@
                 });
             });
             e.preventDefault();
-        });
-
-        $("#show_tic").on('click', '.thread', function(){
-            $(this).attr('href', '/user/showthread/' + $('#tid').val());
         });
     });
 
