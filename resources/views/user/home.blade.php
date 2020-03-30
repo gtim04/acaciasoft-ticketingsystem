@@ -87,8 +87,8 @@
             processing: true,
             serverSide: true,
             "ajax": {
-                "url": "{!! route('user.tickets') !!}",
-                "type": "POST"
+                "url": "{!! route('user.dashboard') !!}",
+                "type": "GET"
             },
             columns: [{ 
                 data: 'code', name: 'code' 

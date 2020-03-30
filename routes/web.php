@@ -23,7 +23,6 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'user.'], function (){
 	//dashboard
 	Route::get('/', 'Ticketing\DashController@userIndex')->name('dashboard');
-	Route::post('/getopentickets', 'Ticketing\DashController@getOpen')->name('tickets');
 	//resolvedtickets
 	Route::get('/showresolved', 'Ticketing\UserResolvedController@indexResolved')->name('sresolved');
 	Route::post('/getrestickets', 'Ticketing\UserResolvedController@getResolved')->name('resolved');
@@ -40,14 +39,13 @@ Route::group(['middleware' => ['auth', 'user'], 'prefix' => 'user', 'as' => 'use
 	//deletedtickets
 	Route::get('/showdeleted', 'Ticketing\UserDeletedController@indexDeleted')->name('sdeleted');
 	Route::post('/getdeleted', 'Ticketing\UserDeletedController@getDeleted')->name('deleted');
-	//thread
-	Route::get('/showthread/{id}', 'Ticketing\ThreadController@userThread')->name('thread')->middleware('thread');
-	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
 	//resolving tickets
 	Route::post('/issueresolved', 'Ticketing\ThreadController@resolveTicket')->name('complete');
-
 	//reopening tickets
 	Route::post('/reopenticket', 'Ticketing\ThreadController@reopenTicket')->name('reopen');
+	//thread
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@userThread')->name('thread')->middleware('thread');
 });
 
 Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'admin.'], function(){
@@ -60,15 +58,15 @@ Route::group(['middleware' => ['auth','admin'], 'prefix' => 'admin', 'as' => 'ad
 	//pop modal
 	Route::post('/showticket', 'Ticketing\PopTicketController@showTicket')->name('sticket');
 	Route::post('/pickupticket', 'Ticketing\PopTicketController@pickupTicket')->name('pickup');
-	//thread
-	Route::get('/showthread/{id}', 'Ticketing\ThreadController@adminThread')->name('thread')->middleware('thread');
-	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
 	//resolvedtickets
 	Route::get('/showresolved', 'Ticketing\AdminResolvedController@indexResolved')->name('sresolved');
 	Route::post('/getrestickets', 'Ticketing\AdminResolvedController@getResolved')->name('resolved');
 	//deletedtickets
 	Route::get('/showdeleted', 'Ticketing\AdminDeletedController@indexDeleted')->name('sdeleted');
 	Route::post('/getdeleted', 'Ticketing\AdminDeletedController@getDeleted')->name('deleted');
+	//thread
+	Route::post('/submitcomment', 'Ticketing\ThreadController@addComment')->name('comment')->middleware('thread');
+	Route::get('/showthread/{id}', 'Ticketing\ThreadController@adminThread')->name('thread')->middleware('thread');
 });
 
 Route::fallback(function () {
